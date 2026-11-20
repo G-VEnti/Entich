@@ -1,8 +1,8 @@
 CREATE TABLE users (
-  id_user INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_user INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(32) NOT NULL,
   password CHAR(32) NOT NULL,
-  type ENUM(admin, student, teacher, alumni) NOT NULL,
+  type ENUM("admin", "student", "teacher", "alumni") NOT NULL,
   email VARCHAR(64) NOT NULL,
   bio TEXT,
   course TINYINT NOT NULL,
@@ -11,48 +11,46 @@ CREATE TABLE users (
 );
 
 CREATE TABLE games (
-  id_game INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_game INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(128) NOT NULL,
   description TEXT,
   rating INT,
   build VARCHAR(48),
   download_amount INT UNSIGNED NOT NULL,
-  release_date DATE NOT NULL
+  release_date DATETIME NOT NULL
 );
 
 CREATE TABLE posts (
-  id_post INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_post INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   text_content TEXT,
   image VARCHAR(48),
-  date DATE NOT NULL
+  posted DATETIME NOT NULL,
+  id_user INT UNSIGNED NOT NULL,
+  FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
 CREATE TABLE commentaries (
-  id_comment INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_comment INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   text_content TEXT,
-  date DATE NOT NULL
+  commented DATETIME NOT NULL,
+  id_user INT UNSIGNED NOT NULL,
+  FOREIGN KEY (id_user) REFERENCES users(id_user)
 );
 
-CREATE TABLE user_games (
-  id_user_game INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  id_user INT UNSIGNED,
-  id_game INT UNSIGNED,
+CREATE TABLE users_games (
+  id_user_game INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  id_user INT UNSIGNED NOT NULL,
+  id_game INT UNSIGNED NOT NULL,
   FOREIGN KEY (id_user) REFERENCES users(id_user),
   FOREIGN KEY (id_game) REFERENCES games(id_game)
 );
 
-CREATE TABLE user_commentaries (
-  id_user_comment INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  id_user INT UNSIGNED,
-  id_comment INT UNSIGNED,
-  FOREIGN KEY (id_user) REFERENCES users(id_user),
-  FOREIGN KEY (id_comment) REFERENCES commentaries(id_comment)
-);
 
-CREATE TABLE post_commentaries (
-  id_post_comment INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  id_post INT UNSIGNED,
-  id_comment INT UNSIGNED,
+
+CREATE TABLE posts_commentaries (
+  id_post_comment INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  id_post INT UNSIGNED NOT NULL,
+  id_comment INT UNSIGNED NOT NULL,
   FOREIGN KEY (id_post) REFERENCES posts(id_post),
   FOREIGN KEY (id_comment) REFERENCES commentaries(id_comment)
 );
